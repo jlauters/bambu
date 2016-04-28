@@ -119,6 +119,7 @@ for pb in pubs:
       bhl_full = utils.normalize(bhl_title['FullTitle'])
       dist = editdistance.eval(pb_title, bhl_full)
 
+      # TODO: Make dist threshold cli param so this can be batched out for differing levels of fuzz
       if pb_title != bhl_full and dist > 10:
 
         # dump in case of dumb mistake
@@ -133,6 +134,7 @@ for pb in pubs:
           for item in title_items:
      
             # Check volume
+            # TODO Normalize and LDist ?
             pb_vol            = pb['vol'] if 'vol' in pb else ""
             pby               = pb['pby'] if 'pby' in pb else ""
             bhl_vol           = item['Volume'].replace(" ", "")
@@ -161,6 +163,7 @@ for pb in pubs:
                 if stripped is not None:
                   ocr_blob += "\n" + stripped
 
+                  # TODO: Normalize, LDist, tokenize tit and do TF-IDF ?
                   if pb['tit'][5:20].lower() in stripped.lower():
                     print "Found PBDB Title in OCR"
                     add_to_db = True
