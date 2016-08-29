@@ -12,6 +12,12 @@ from pymongo import MongoClient
 
 search = sys.argv[1]
 
+config = json.load(open('./config.json'))
+
+# MongoDB Setup
+client = MongoClient(config['mongo_url'])
+db = client.test
+
 def taxa_by_ref(base_name):
   print "searching: " + base_name
 
@@ -62,6 +68,19 @@ def taxa_by_ref(base_name):
 
   return references
 
+flattened = []
 taxa = taxa_by_ref(search) 
+for ref_id in taxa:
 
-print taxa['25746']
+  names = []
+  for mention in taxa[ref_id]:
+    names.append(mention['name'])
+
+  flat = {"ref_id": ref_id, "names": names }
+  result = db.taxon_lookup.insert_one(flat)
+
+  flattened.append(flat)
+
+#print flattened
+print str(len(flattened)) + " Flattened"
+print "done!"

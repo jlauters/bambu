@@ -1,6 +1,7 @@
 # Bambu Utils
 
 import string
+import re
 
 def init_fields(specimen):
   ret = {}
