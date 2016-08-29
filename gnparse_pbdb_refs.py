@@ -10,7 +10,7 @@ db = client.test
 data_sources = '1|3|8|9|11|12|105|170|172'
 
 records = db.pbdb_refs.find({"classification_path": { "$exists": False }})
-for record in records.sort("_id", -1):
+for record in records:
 
   for sciname in record['sci_names']:
  
