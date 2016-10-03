@@ -9,11 +9,13 @@ db = client.test
 
 data_sources = '1|3|8|9|11|12|105|170|172'
 
-records = db.pbdb_taxon_lookup.find({'classification_path': { '$eq': []}}).limit(100).skip(100)
+records = db.pbdb_taxon_lookup.find({'ref_no': '6929'})
 for record in records:
 
   for sciname in record['genus']:
  
+    print "checking GNParser for " + sciname 
+
     gnparser = requests.get('http://resolver.globalnames.org/name_resolvers.json?names=' + sciname + '&data_source_ids=' + data_sources + '&with_vernaculars&with_context=true')
     if 200 == gnparser.status_code:
         gnp_json = json.loads( gnparser.content )
@@ -24,6 +26,7 @@ for record in records:
         if known_name and 'results' in gnp_json['data'][0]:
             print gnp_json['data'][0]['results']
 
+            classification_path = ''
             for gn_result in gnp_json['data'][0]['results']:
               if gn_result['classification_path']:
 
